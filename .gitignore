@@ -1,7 +1,9 @@
 *.iml
+*.secrets.yml
 /.idea
 /.ssh
 /build
 /group_vars
 /hooks
 /host_vars
+

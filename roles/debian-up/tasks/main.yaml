@@ -45,13 +45,14 @@
       - nfs-common
       - open-iscsi
       - software-properties-common
+      - cifs-utils
 - name: remove obsolete or unused packages
   apt:
     autoclean: yes
     autoremove: yes
 - name: set hostname
   hostname:
-    name: "{{ inventory_hostname }}"
+    name: "{{ hostname }}"
   notify: reload avahi-daemon
 - name: "set timezone to {{ timezone }}"
   timezone:

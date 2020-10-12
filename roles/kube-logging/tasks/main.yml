@@ -1,0 +1,29 @@
+- name: Deploy kube-logging namespace
+  community.kubernetes.k8s:
+    state: present
+    defenition: "{{ lookup('file', {{ role_path }}'/files/kube-logging.yml') | from_yaml }}"
+- name: Deploy elasticsearch service
+  community.kubernetes.k8s:
+    state: present
+    defenition: "{{ lookup('file', {{ role_path }}'/files/elasticsearch_svc.yml') | from_yaml }}"
+- name: deploy elasticsearch_statefulset
+  community.kubernetes.k8s:
+    state: present
+    defenition: "{{ lookup('file', {{ role_path }}'/files/elasticsearch_statefulset.yml') | from_yaml }}"
+- name: deploy kibana
+  community.kubernetes.k8s:
+    state: present
+    defenition: "{{ lookup('file', {{ role_path }}'/files/kibana.yml') | from_yaml }}"
+- name: deploy kibana load-balancer
+  community.kubernetes.k8s:
+    state: present
+    defenition: "{{ lookup('file', {{ role_path }}'/files/kibana-loadbalancer.yml') | from_yaml }}"
+- name: deploy filebeat
+  community.kubernetes.k8s:
+    state: present
+    defenition: "{{ lookup('file', {{ role_path }}'/files/filebeat-generated.yml') | from_yaml }}"
+- name: deploy metricbeat
+  community.kubernetes.k8s:
+    state: present
+    defenition: "{{ lookup('file', {{ role_path }}'/files/metricbeat-generated.yml') | from_yaml }}"
+

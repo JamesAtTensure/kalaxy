@@ -13,6 +13,7 @@
     - ubuntu
   roles:
     - debian-up
+    - configure-fstab-mounts
 - hosts: all
   roles:
     - docker-up
@@ -35,3 +36,11 @@
 - hosts: k8s_worker
   roles:
     - k8s-worker-up
+- hosts:
+    - k8s_master
+    - k3s_master
+  roles:
+    - kube-install-helm
+    - kube-local-static-provisioner
+    - kube-metallb
+    - kube-logging

@@ -1,0 +1,4 @@
+- name: Install metallb on k8s cluster
+  community.kubernetes.k8s:
+    state: present
+    defenition: "{{ lookup('file', {{ role_path }}'/files/layer2config.yml') | from_yaml }}"

@@ -1,0 +1,22 @@
+---
+- name: Clone sig-storage-local-static-provisioner
+  git: 
+    repo: https://github.com/kubernetes-sigs/sig-storage-local-static-provisioner.git
+    dest: /tmp/src/sig-local-static-provisioner
+    accept_hostkey: yes
+
+- name: Copy files for provisioner
+  copy:
+    src: "{{ role_path }}/files/local-storage-provisioner-vars.yaml"
+    dest: /tmp/src/sig-local-static-provisioner/local-storage-provisioner-vars.yaml
+
+- name: template local-static-provisioner
+  shell: |
+    helm template -f local-storage-provisioner-vars.yaml --namespace kube-system ./helm/provisioner > local-volume-provisioner.yaml
+  args:
+    chdir: /tmp/src/sig-local-static-provisioner/local-storage-provisioner-vars.yaml
+
+- name: Deploy local-static-provisioner
+  community.kubernetes.k8s:
+    state: present
+    src: /tmp/src/sig-local-static-provisioner/local-volume-provisioner.yaml

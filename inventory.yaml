@@ -2,39 +2,44 @@
 all:
   hosts:
     node-0:
-      ansible_host: 192.168.71.20
+      ansible_host: 192.168.2.10
+      hostname: pi4-k8s-master
+      node: node0
     node-1:
-      ansible_host: 192.168.71.21
+      ansible_host: 192.168.2.11
+      hostname: pi4-k8s-node1
+      node: node1
     node-2:
-      ansible_host: 192.168.71.22
+      ansible_host: 192.168.2.12
+      hostname: pi4-k8s-node2
+      node: node2
     node-3:
-      ansible_host: 192.168.71.23
+      ansible_host: 192.168.2.13
+      hostname: pi4-k8s-node3
+      node: node3
     node-4:
-      ansible_host: 192.168.71.24
-    node-5:
-      ansible_host: 192.168.71.25
-    node-6:
-      ansible_host: 192.168.71.26
+      ansible_host: 192.168.2.14
+      hostname: pi4-k8s-node4
+      node: node4
+
   children:
     k3s_master:
       # At most one master:
-      hosts:
-        node-0: { }
+      hosts: { }
     k3s_worker:
       # None if there is no master, otherwise at least one worker:
-      hosts:
+      hosts: { }
+    k8s_master:
+      # At most one master:
+      hosts: 
+        node-0: { }
+    k8s_worker:
+      # None if there is no master, otherwise at least one worker:
+      hosts: 
         node-1: { }
         node-2: { }
         node-3: { }
         node-4: { }
-        node-5: { }
-        node-6: { }
-    k8s_master:
-      # At most one master:
-      hosts: { }
-    k8s_worker:
-      # None if there is no master, otherwise at least one worker:
-      hosts: { }
     raspberry_pi_hw:
       hosts:
         node-0: { }
@@ -42,22 +47,18 @@ all:
         node-2: { }
         node-3: { }
         node-4: { }
-        node-5: { }
-        node-6: { }
     raspberry_pi_os:
-      hosts:
+      hosts: { }
+      vars:
+        ansible_ssh_user: ubuntu
+        boot_directory: /boot
+    ubuntu:
+      hosts: 
         node-0: { }
         node-1: { }
         node-2: { }
         node-3: { }
         node-4: { }
-        node-5: { }
-        node-6: { }
-      vars:
-        ansible_ssh_user: pi
-        boot_directory: /boot
-    ubuntu:
-      hosts: { }
       vars:
         ansible_ssh_user: ubuntu
         boot_directory: /boot/firmware
@@ -74,9 +75,9 @@ all:
     #docker_version: "5:19.03.13~3-0~{{ ansible_lsb.id.lower() }}-{{ ansible_lsb.codename.lower() }}" # (https://docs.docker.com/install/linux/docker-ce/ubuntu/)
     #k3s_version: v1.19.2+k3s1 # (https://github.com/rancher/k3s/releases)
     #k8s_version: 1.19.2-00 # (https://github.com/kubernetes/kubernetes/releases)
-    #locale: C.UTF-8
+    locale: C.UTF-8
     # Make sure to match all nodes and the `docker_registry_mirror_url`:
     #no_proxy: 127.0.0.1,.local,localhost
     # Make sure to use an IP address, not a hostname, or otherwise expect the Kubernetes setup to fail:
     #proxy_url: http://10.0.0.1:3128/
-    #timezone: UTC
+    timezone: America/Denver

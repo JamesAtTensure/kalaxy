@@ -1,0 +1,34 @@
+---
+- name: "Load all the secrets"
+  include_vars: ".secrets.yml"
+  no_log: true
+
+- name: "add /etc/win-credentials"
+  copy:
+    dest: "{{ item.key }}"
+    content: "{{ item.value.content }}"
+    owner: "{{ item.value.owner }}"
+    group: "{{ item.value.group }}"
+    mode: "{{ item.value.mode }}"
+  with_dict: samba_secret_credentials
+  no_log: true
+
+- name: "Create /data mountpoint"
+  file:
+    path: /data
+    state: directory
+    mode: '0755'
+
+- name: "Create /data/data mountpoint"
+  file:
+    path: /data/data
+    state: directory
+    mode: '0755'
+
+- name: "Add /data/data mount"
+  ansible.posix.mount:
+    src: 192.168.2.3:/data/{{ node }}
+    path: /data/data
+    opts: credentials=/etc/win-credentials,file_mode=0755,dir_mode=0755
+    state: mounted
+    fstype: cifs

@@ -1,0 +1,10 @@
+common:
+  rbac:
+    create: true
+classes:
+- name: local-storage
+  hostDir: /data
+  blockCleanerCommand:
+  - "/scripts/quick_reset.sh"
+  volumeMode: Filesystem
+  storageClass: true
